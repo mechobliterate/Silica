@@ -1,0 +1,26 @@
+#ifndef ERROR_H
+#define ERROR_H
+#include "../error.h"
+
+using namespace Silica;
+
+class ReferenceError : public Error {
+public:
+  ReferenceError(std::string message)
+    : Error(message) {}
+};
+
+class SyntaxError : public Error {
+public:
+  SyntaxError(std::string message)
+    : Error(message) {}
+};
+
+class TypeError : public Error {
+public:
+  TypeError(std::string message)
+    : Error(message) {}
+};
+
+
+#endif

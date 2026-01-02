@@ -1,0 +1,287 @@
+#ifndef AST_PRETTY_PRINTER_H
+#define AST_PRETTY_PRINTER_H
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include "ast_visitor.h"
+
+class ASTPrettyPrinter : public ASTVisitor<ASTPrettyPrinter, void, void> {
+public:
+  StringInterner& stringInterner;
+  std::vector<bool> isLastChild;
+
+  explicit ASTPrettyPrinter(StringInterner& stringInterner)
+    : stringInterner(stringInterner) {
+  }
+
+  void print(Expr& expr) {
+    isLastChild.clear();
+    visit(expr);
+    std::cout << std::endl;
+  }
+
+  void print(Stmt& stmt) {
+    isLastChild.clear();
+    visit(stmt);
+    std::cout << std::endl;
+  }
+
+  void visitVoidExpr(IntegerExpr& expr) {
+    printPrefix();
+    std::cout << "Void " << std::endl;
+  }
+
+  void visitIntegerExpr(IntegerExpr& expr) {
+    printPrefix();
+    std::cout << "Integer " << expr.getValue() << std::endl;
+  }
+
+  void visitDoubleExpr(DoubleExpr& expr) {
+    printPrefix();
+    std::cout << "Double " << expr.getValue() << std::endl;
+  }
+
+  void visitBoolExpr(BoolExpr& expr) {
+    printPrefix();
+    std::cout << "Bool " << (expr.getValue() ? "true" : "false") << std::endl;
+  }
+
+  void visitVariableExpr(VariableExpr& expr) {
+    printPrefix();
+    std::cout << "Variable " << stringInterner.get(expr.var.name) << " : "
+              << (expr.var.type.has_value() ? expr.var.type.value()->toString() : "unknown")
+              << std::endl;
+  }
+
+  void visitSelfExpr(SelfExpr& expr) {
+    printPrefix();
+    std::cout << "self" << std::endl;
+  }
+
+  void visitApplyExpr(ApplyExpr& expr) {
+    printPrefix();
+    std::cout << "Apply" << std::endl;
+
+    isLastChild.push_back(false);
+    printPrefix();
+    std::cout << "Function" << std::endl;
+    isLastChild.push_back(false);
+    visit(*expr.callee);
+    isLastChild.pop_back();
+    isLastChild.pop_back();
+
+    isLastChild.push_back(true);
+    printPrefix();
+    std::cout << "Arguments" << std::endl;
+    for (size_t i = 0; i < expr.arguments.size(); i++) {
+      bool isLast = (i == expr.arguments.size() - 1);
+      isLastChild.push_back(isLast);
+      visit(*expr.arguments[i]);
+      isLastChild.pop_back();
+    }
+    isLastChild.pop_back();
+  }
+
+  void visitBinaryExpr(BinaryExpr& expr) {
+    printPrefix();
+    std::cout << "Binary " << toString(expr.op) << std::endl;
+
+    isLastChild.push_back(false);
+    visit(*expr.left);
+    isLastChild.pop_back();
+
+    isLastChild.push_back(true);
+    visit(*expr.right);
+    isLastChild.pop_back();
+  }
+
+  void visitUnaryExpr(UnaryExpr& expr) {
+    printPrefix();
+    std::cout << "Unary " << toString(expr.op) << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*expr.operand);
+    isLastChild.pop_back();
+  }
+
+  void visitAssignExpr(AssignExpr& expr) {
+    printPrefix();
+    std::cout << "AssignExpr " << stringInterner.get(expr.var.name) << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*expr.expression);
+    isLastChild.pop_back();
+  }
+
+  void visitGetExpr(GetExpr& expr) {
+    printPrefix();
+    std::cout << "GetExpr " << stringInterner.get(expr.name.name) << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*expr.obj);
+    isLastChild.pop_back();
+  }
+
+  void visitSetExpr(SetExpr& expr) {
+    printPrefix();
+    std::cout << "SetExpr " << stringInterner.get(expr.var.name) << std::endl;
+
+    isLastChild.push_back(false);
+    printPrefix();
+    std::cout << "Object" << std::endl;
+    isLastChild.push_back(false);
+    visit(*expr.obj);
+    isLastChild.pop_back();
+    isLastChild.pop_back();
+
+    isLastChild.push_back(true);
+    printPrefix();
+    std::cout << "Value" << std::endl;
+    isLastChild.push_back(true);
+    visit(*expr.value);
+    isLastChild.pop_back();
+    isLastChild.pop_back();
+  }
+
+  void visitBlockStmt(BlockStmt& stmt) {
+    printPrefix();
+    std::cout << "Block" << std::endl;
+
+    for (size_t i = 0; i < stmt.statements.size(); i++) {
+      bool isLast = (i == stmt.statements.size() - 1);
+      isLastChild.push_back(isLast);
+      visit(*stmt.statements[i]);
+      isLastChild.pop_back();
+    }
+  }
+
+  void visitDeclareStmt(DeclareStmt& stmt) {
+    printPrefix();
+    std::cout << "Declare " << stringInterner.get(stmt.var.name);
+    std::cout << " : " << (stmt.var.type.has_value() ? stmt.var.type.value()->toString() : "unknown");
+    std::cout << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*stmt.expression);
+    isLastChild.pop_back();
+  }
+
+  void visitFunctionStmt(FunctionStmt& stmt) {
+    printPrefix();
+    std::cout << "Function " << stringInterner.get(stmt.name.name) << "(";
+
+    for (size_t i = 0; i < stmt.params.size(); ++i) {
+      auto param = stmt.params.at(i);
+      std::cout << stringInterner.get(param.name);
+      std::cout << " : " << (param.type.has_value() ? param.type.value()->toString() : "unknown");
+      if (i < stmt.params.size() - 1) {
+        std::cout << ", ";
+      }
+    }
+    std::cout << ")";
+    std::cout << " -> " << (stmt.returnType->toString());
+    std::cout << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*stmt.body);
+    isLastChild.pop_back();
+  }
+
+  void visitClassStmt(ClassStmt& stmt) {
+    printPrefix();
+    std::cout << "Class " << stringInterner.get(stmt.name.name) << std::endl;
+
+    if (!stmt.declarations.empty()) {
+      isLastChild.push_back(stmt.methods.empty());
+      printPrefix();
+      std::cout << "Declarations" << std::endl;
+
+      for (size_t i = 0; i < stmt.declarations.size(); ++i) {
+        bool isLast = (i == stmt.declarations.size() - 1) && stmt.methods.empty();
+        isLastChild.push_back(isLast);
+        visit(*stmt.declarations[i]);
+        isLastChild.pop_back();
+      }
+
+      isLastChild.pop_back();
+    }
+
+    if (!stmt.methods.empty()) {
+      isLastChild.push_back(true);
+      printPrefix();
+      std::cout << "Methods" << std::endl;
+
+      for (size_t i = 0; i < stmt.methods.size(); ++i) {
+        bool isLast = (i == stmt.methods.size() - 1);
+        isLastChild.push_back(isLast);
+        visit(*stmt.methods[i]);
+        isLastChild.pop_back();
+      }
+
+      isLastChild.pop_back();
+    }
+  }
+
+  void visitExprStmt(ExprStmt& stmt) {
+    printPrefix();
+    std::cout << "Expr " << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*stmt.expression);
+    isLastChild.pop_back();
+  }
+
+  void visitReturnStmt(ReturnStmt& stmt) {
+    printPrefix();
+    std::cout << "Return" << std::endl;
+
+    isLastChild.push_back(true);
+    visit(*stmt.expression);
+    isLastChild.pop_back();
+  }
+
+  void visitIfStmt(IfStmt& stmt) {
+    printPrefix();
+    std::cout << "If" << std::endl;
+
+    isLastChild.push_back(false);
+    printPrefix();
+    std::cout << "Condition" << std::endl;
+    isLastChild.push_back(true);
+    visit(*stmt.condition);
+    isLastChild.pop_back();
+    isLastChild.pop_back();
+
+    isLastChild.push_back(!stmt.elseBranch.has_value());
+    printPrefix();
+    std::cout << "Then" << std::endl;
+    isLastChild.push_back(true);
+    visit(*stmt.thenBranch);
+    isLastChild.pop_back();
+    isLastChild.pop_back();
+
+    if (stmt.elseBranch.has_value()) {
+      isLastChild.push_back(true);
+      printPrefix();
+      std::cout << "Else" << std::endl;
+      isLastChild.push_back(true);
+      visit(**stmt.elseBranch);
+      isLastChild.pop_back();
+      isLastChild.pop_back();
+    }
+  }
+
+private:
+  void printPrefix() {
+    for (size_t i = 0; i < isLastChild.size(); i++) {
+      if (i == isLastChild.size() - 1) {
+        std::cout << (isLastChild[i] ? " └─ " : " ├─ ");
+      } else {
+        std::cout << (isLastChild[i] ? "    " : " │  ");
+      }
+    }
+  }
+};
+
+#endif

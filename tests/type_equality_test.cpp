@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "frontend/factory.h"
-#include "frontend/type.h"
+#include "../src/parser/factory.h"
+#include "../src/analyzer/type.h"
 
 TEST(TypeEqualityTest, IntegerEquality) {
   EXPECT_EQ(IntegerType(), IntegerType());

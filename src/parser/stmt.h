@@ -2,7 +2,7 @@
 #define STMT_H
 
 #include "expr.h"
-#include "var.h"
+#include "../analyzer/var.h"
 
 enum class StmtKind {
   Block,

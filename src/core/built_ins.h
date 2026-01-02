@@ -4,9 +4,9 @@
 #include <vector>
 
 #include "debug.h"
-#include "frontend/type.h"
-#include "runtime/object.h"
-#include "runtime/object_ptr.h"
+#include "../analyzer/type.h"
+#include "../runtime/object.h"
+#include "../runtime/object_ptr.h"
 
 static Value print(std::vector<Value>& args, StringInterner& stringInterner) {
   std::cout << valueToString(args[0], stringInterner) << std::endl;

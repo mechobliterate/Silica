@@ -18,4 +18,4 @@ add_executable(tests
 target_include_directories(
         tests
         PRIVATE ${CMAKE_SOURCE_DIR}/src)
-target_link_libraries(tests gtest_main core)
+target_link_libraries(tests gtest_main silica_cli)

@@ -5,7 +5,7 @@
 #include "stmt.h"
 #include <vector>
 
-#include "var.h"
+#include "../analyzer/var.h"
 
 namespace E {
   inline std::unique_ptr<VoidExpr> Void() {

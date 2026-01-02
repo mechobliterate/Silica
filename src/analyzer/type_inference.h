@@ -5,10 +5,10 @@
 #include <set>
 #include <vector>
 
-#include "error.h"
-#include "expr.h"
-#include "factory.h"
-#include "stmt.h"
+#include "../lexer/error.h"
+#include "../parser/expr.h"
+#include "../parser/factory.h"
+#include "../parser/stmt.h"
 #include "type_constraint.h"
 #include "union_find.h"
 

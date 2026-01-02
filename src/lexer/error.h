@@ -1,6 +1,6 @@
 #ifndef ERROR_H
 #define ERROR_H
-#include "../error.h"
+#include "../core/error.h"
 
 using namespace Silica;
 

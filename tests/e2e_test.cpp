@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "silica.h"
+#include "../src/cli/silica.h"
 
 class E2ETest : public ::testing::Test {
  protected:

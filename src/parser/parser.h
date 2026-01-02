@@ -2,7 +2,7 @@
 #define PARSER_H
 
 #include "factory.h"
-#include "scanner.h"
+#include "../lexer/scanner.h"
 #include "stmt.h"
 
 class ParseError : public Error {

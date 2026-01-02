@@ -5,13 +5,13 @@
 
 #include <fstream>
 
-#include "built_ins.h"
-#include "frontend/ast_pretty_printer.h"
-#include "frontend/compiler.h"
-#include "frontend/parser.h"
-#include "frontend/type_inference.h"
-#include "frontend/var.h"
-#include "vm/vm.h"
+#include "../core/built_ins.h"
+#include "../parser/ast_pretty_printer.h"
+#include "../compiler/compiler.h"
+#include "../parser/parser.h"
+#include "../analyzer/type_inference.h"
+#include "../analyzer/var.h"
+#include "../vm/vm.h"
 
 namespace Silica {
 class Interpreter {

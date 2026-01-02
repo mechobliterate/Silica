@@ -3,7 +3,7 @@
 #include <string>
 
 #include "bytecode.h"
-#include "frontend/string_interner.h"
+#include "string_interner.h"
 
 std::string opcodeToString(Opcode opcode);
 std::string chunkToString(const Chunk& chunk, const std::string& name,

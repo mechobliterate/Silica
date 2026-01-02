@@ -3,8 +3,8 @@
 
 #include <utility>
 
-#include "type.h"
-#include "var.h"
+#include "../analyzer/type.h"
+#include "../analyzer/var.h"
 
 enum class ExprKind {
   Void,

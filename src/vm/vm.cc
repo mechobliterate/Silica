@@ -4,7 +4,7 @@
 #include <stdexcept>
 #include <vector>
 
-#include "../debug.h"
+#include "../core/debug.h"
 #include "../runtime/object.h"
 #include "../runtime/object_ptr.h"
 #include "../runtime/value.h"

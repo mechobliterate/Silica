@@ -2,7 +2,7 @@
 #define VAR_H
 #include <optional>
 
-#include "string_interner.h"
+#include "../core/string_interner.h"
 #include "type.h"
 
 using VariableName = SymbolId;

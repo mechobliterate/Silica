@@ -1,9 +1,9 @@
-#include "frontend/parser.h"
+#include "../src/parser/parser.h"
 
 #include <gtest/gtest.h>
 
-#include "frontend/ast_pretty_printer.h"
-#include "frontend/scanner.h"
+#include "../src/parser/ast_pretty_printer.h"
+#include "../src/lexer/scanner.h"
 
 TEST(ParserTest, VarStatement) {
   std::string source = R"(

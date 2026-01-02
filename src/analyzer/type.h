@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "string_interner.h"
+#include "../core/string_interner.h"
 
 using TypeVar = uint32_t;
 

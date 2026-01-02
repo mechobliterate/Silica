@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "frontend/union_find.h"
-#include "frontend/factory.h"
+#include "../src/analyzer/union_find.h"
+#include "../src/parser/factory.h"
 
 TEST(UnionFindTest, InsertAndFind) {
   UnionFind uf;

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "runtime/value.h"
+#include "../runtime/value.h"
 
 namespace Silica {
 

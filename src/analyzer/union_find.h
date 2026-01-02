@@ -2,7 +2,7 @@
 #define UNION_FIND_H
 #include <vector>
 
-#include "../error.h"
+#include "../core/error.h"
 #include "type.h"
 
 using namespace Silica;

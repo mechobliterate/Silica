@@ -4,7 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "runtime/object.h"
+#include "../runtime/object.h"
 
 std::string opcodeToString(Opcode opcode) {
   switch (opcode) {

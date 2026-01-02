@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include "runtime/value.h"
+#include "../runtime/value.h"
 
 using Instruction = uint32_t;
 

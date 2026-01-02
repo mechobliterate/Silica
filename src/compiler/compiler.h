@@ -2,13 +2,13 @@
 #define COMPILER_H
 #include <assert.h>
 
-#include "../bytecode.h"
-#include "../debug.h"
-#include "../frontend/ast_visitor.h"
-#include "../frontend/factory.h"
-#include "../frontend/stmt.h"
+#include "../core/bytecode.h"
+#include "../core/debug.h"
+#include "../parser/ast_visitor.h"
+#include "../parser/factory.h"
+#include "../parser/stmt.h"
 #include "../runtime/object.h"
-#include "string_interner.h"
+#include "../core/string_interner.h"
 
 struct Local {
   VariableName name;
